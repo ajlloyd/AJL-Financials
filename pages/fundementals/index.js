@@ -13,6 +13,7 @@ var Scraper = require('images-scraper');
 
 
 
+
 const Index = (props, {income}) => {
 
     const router = useRouter();
@@ -34,7 +35,6 @@ const Index = (props, {income}) => {
             setDarkMode(true)
             console.log("Dark Mode Deactivated")
         } 
-        
     }
         
     return (
