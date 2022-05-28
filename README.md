@@ -1,4 +1,13 @@
 # AJL Financials - fundemental-stock-analysis
+
+Note: This could not be deployed due to timeout restrictions on Heroku/Vercel. 
+
+Note 2: The fetch request only takes 20 seconds due to a hard coded wait time - this is to get around the API limit on Alpha Vantage of 5 requests per minute. With a paid version of Alpha Vantage API it would likely take a few seconds to compare 5 tickers compared to >60s that it currently takes.
+
+
+
+------
+
 NextJS website parsing data from Alpha Vantage API and Yahoo Finance API to allow a user to compare up to 5 stock tickers of their choice. Follow below steps to install this locally:
 
 1 - Either clone this repository or download the source files
@@ -16,3 +25,5 @@ NextJS website parsing data from Alpha Vantage API and Yahoo Finance API to allo
 7 - Allow around 20 to 30 seconds per ticker as the API has to fetch the data
 
 8 - Compare and Profit!
+
+

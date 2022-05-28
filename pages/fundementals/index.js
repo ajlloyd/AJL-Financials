@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react';
 import { GetServerSideProps } from 'next'
 //import fetch from 'node-fetch'
 import styles from "../../styles/StockTable.module.scss"
@@ -711,8 +711,10 @@ export async function getServerSideProps(props, context) {
         const priceResponse = await fetch(`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${ticker}`, {
             method: "GET", 
             accept: "application/json",
-            headers: {'x-api-key': 'u74BHf6Zs044lOC4blIke4uvHWmsEdPZ5v4gbJT6'}});
+            headers: {'x-api-key': 'iRNetd47al209NQNtgJcg4e2vbOM5N8g2oiz5Row'}});
         const prices = await priceResponse.json();
+        console.log(prices)
+        console.log("hello is it here ")
         const shortenedPrices = prices["quoteResponse"]["result"][0]
         priceData.push(shortenedPrices);
 
