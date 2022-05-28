@@ -9,13 +9,12 @@ import {AiFillHome} from "react-icons/ai"
 import Button from 'react-bootstrap/Button'
 import OverlayStockTable from '../../components/OverlayStockTable'
 import Graphy from '../../components/Graphy'
-var Scraper = require('images-scraper');
+//var Scraper = require('images-scraper');
 
 
 
 
 const Index = (props, {income}) => {
-
     const router = useRouter();
     const tickerPayloadObject = router.query;
     const tickerPayloadArray = Object.values(tickerPayloadObject)
@@ -66,7 +65,7 @@ const Index = (props, {income}) => {
 
                         {/*<Graphy/>*/}
 
-                        {/* Image */}
+                        {/* Image 
 
                         <tr id={styles.imageRow}><td></td>
                         {tickerPayloadArray.map((x, i) => {
@@ -74,7 +73,7 @@ const Index = (props, {income}) => {
                         <td key={`logo${i}`}>
                             <img id={styles.logoImage} src={props.logoImages[i]} />
                         </td>)
-                        })}</tr>
+                        })}</tr>*/}
 
                         {/* Stock Name */}
                         <tr id={styles.whiteRow}><td>Name</td>
@@ -745,7 +744,7 @@ export async function getServerSideProps(props, context) {
         netProfitMarginAll.push(normalisedNetProfitMargin)
 
         //image:
-        console.log(`Image Scraper running ${ticker}... `);
+        {/*console.log(`Image Scraper running ${ticker}... `);
         const google = new Scraper({
             puppeteer: {
               headless: true,
@@ -759,7 +758,7 @@ export async function getServerSideProps(props, context) {
         const results = await google.scrape(concat, 1);
         const image = results[0]["url"]
         console.log(image);
-        logoImages.push(image)
+    logoImages.push(image)*/}
 
 
 
@@ -773,9 +772,10 @@ export async function getServerSideProps(props, context) {
     //console.log(priceData)
     //console.log(balanceData)
     //console.log(grossprofitall[0])
+    // logoImages
 
     return{
-        props: { overviewData, incomeData, priceData, balanceData, grossProfitAll, netProfitAll, netProfitMarginAll, logoImages }
+        props: { overviewData, incomeData, priceData, balanceData, grossProfitAll, netProfitAll, netProfitMarginAll, }
     }
 
     
