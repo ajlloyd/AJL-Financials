@@ -33,10 +33,10 @@ export default function Home(props) {
   const handleAddClick = () => {
     console.log(inputList)
     var length = inputList.length;
-    if (length <= 4) {
+    if (length <= 1) {
       setInputList([...inputList, { ticker: "" }]);
     } else {
-      alert("You may only compare 5 stocks")
+      alert("You may only compare 2 stocks at once in this version")
     }
   };
 
@@ -110,7 +110,7 @@ export default function Home(props) {
       <div className={styles.footer}>
           <small>Copyright Aaron Lloyd Development © </small>
           <small>ajlloyd.dev@gmail.com </small>
-          <small>Version 22.2</small>
+          <small>Version 22.3</small>
 
       </div>
       

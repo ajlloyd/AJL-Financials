@@ -9,7 +9,7 @@ import {AiFillHome} from "react-icons/ai"
 import Button from 'react-bootstrap/Button'
 import OverlayStockTable from '../../components/OverlayStockTable'
 import Graphy from '../../components/Graphy'
-var Scraper = require('images-scraper');
+//var Scraper = require('images-scraper');
 
 
 
@@ -79,7 +79,7 @@ const Index = (props, {income}) => {
                         <tr id={styles.whiteRow}><td>Name</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`name${i}`}>{props.priceData[i]["shortName"]}</td>)
+                                <td key={`name${i}`}>{props.priceData[i]["companyName"]}</td>) 
                         })}</tr>
 
                         {/* Stock Sector */}
@@ -90,12 +90,19 @@ const Index = (props, {income}) => {
                         })}</tr>
 
 
-                        {/* Analyst Rating  */}
-                        <tr id={styles.whiteRow}><td>Average Analyst Rating</td>
+                        {/* Market Cap  */}
+                        <tr id={styles.whiteRow}><td>Market Cap</td>
                         {tickerPayloadArray.map((x,i) => {
+
+                            const n = parseInt(props.overviewData[i]["MarketCapitalization"]).toExponential(2);
+                            const sliceCap = n.split("e+")
+                            const mCapVal = sliceCap[0] + " x 10"
+                            const mCapPower = sliceCap[1]
+
+
                             return(
-                                <td key={`Rating${i}`}>{props.priceData[i]["averageAnalystRating"]}</td>)
-                        })}</tr>    
+                                <td key={`Rating${i}`}> {mCapVal} <sup>{mCapPower}</sup></td>) // NO METHOD
+                        })}</tr>
 
 
                         {/* Current Info Header -----------------------------------------------------------------------------------------------------------------------*/}
@@ -109,13 +116,13 @@ const Index = (props, {income}) => {
                         <tr id={styles.whiteRow}><td>Price</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`price${i}`}>{props.priceData[i]["regularMarketPrice"] + " " + props.priceData[i]["currency"]}</td>)
+                                <td key={`price${i}`}>{props.priceData[i]["iexRealtimePrice"] + " " + props.priceData[i]["currency"]}</td>) 
                         })}</tr>
 
                         {/* Market Change Since Close */}
                         <tr id={styles.whiteRow}><td>Change Since Close</td>
                         {tickerPayloadArray.map((x,i) => {
-                            const priceChange = props.priceData[i]["regularMarketChange"]
+                            const priceChange = props.priceData[i]["change"] //change
                             function greenOrRed(change) {
                                 if (priceChange > 0) {
                                     return styles.positiveChange
@@ -128,7 +135,7 @@ const Index = (props, {income}) => {
                             }
 
                             return(
-                                <td key={`change${i}`} id={greenOrRed(priceChange)}>{priceChange.toFixed(2) + " " + props.priceData[i]["currency"] + "  (" + props.priceData[i]["regularMarketChangePercent"].toFixed(2) + " %)"}</td>
+                                <td key={`change${i}`} id={greenOrRed(priceChange)}>{priceChange.toFixed(2) + " " + props.priceData[i]["currency"] + "  (" + props.priceData[i]["changePercent"].toFixed(2) + " %)"}</td>
                                 )
                         })}</tr>
 
@@ -137,36 +144,46 @@ const Index = (props, {income}) => {
                         <tr id={styles.whiteRow}><td>50 Day MA</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`50dayMA${i}`}>{props.priceData[i]["fiftyDayAverage"].toFixed(2)}</td>)
+                                <td key={`50dayMA${i}`}>{parseInt(props.overviewData[i]["50DayMovingAverage"]).toFixed(2)}</td>) 
                         })}</tr>
 
                         {/* Two hundred Day MA */}
                         <tr id={styles.whiteRow}><td>200 Day MA</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`200dayMA${i}`}>{props.priceData[i]["twoHundredDayAverage"].toFixed(2)}</td>)
+                                <td key={`200dayMA${i}`}>{parseInt(props.overviewData[i]["200DayMovingAverage"]).toFixed(2)}</td>) 
                         })}</tr>
 
                         {/* 52 Week High */}
                         <tr id={styles.whiteRow}><td>52 Week High</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`52wkHigh${i}`}>{props.priceData[i]["fiftyTwoWeekHigh"].toFixed(2)}</td>)
+                                <td key={`52wkHigh${i}`}>{props.priceData[i]["week52High"].toFixed(2)}</td>) 
                         })}</tr>
 
                         {/* 52 Week Low */}
                         <tr id={styles.whiteRow}><td>52 Week Low</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`52wkLow${i}`}>{props.priceData[i]["fiftyTwoWeekLow"].toFixed(2)}</td>)
+                                <td key={`52wkLow${i}`}>{props.priceData[i]["week52Low"].toFixed(2)}</td>) 
                         })}</tr>
 
 
                         {/* 52 Week High Discount Percentage */}
                         <tr id={styles.whiteRow}><td>52 Week High Discount (%)</td>
                         {tickerPayloadArray.map((x,i) => {
+
+                            function relDiff(a, b) {
+                                return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
+                            }
+
+                            const a = props.priceData[i]["iexRealtimePrice"]
+                            const b = props.priceData[i]["week52High"]
+
+                            const pctDifference = relDiff(a,b)
+
                             return(
-                                <td key={`pctChange${i}`}>{(props.priceData[i]["fiftyTwoWeekHighChangePercent"]*100).toFixed(2) + " %"}</td>)
+                                <td key={`pctChange${i}`}>{(pctDifference).toFixed(2) + " %"}</td>) // week52High and current price difference pct
                         })}</tr>
 
 
@@ -188,21 +205,7 @@ const Index = (props, {income}) => {
                             </div></td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`EPS${i}`}>{props.priceData[i]["epsTrailingTwelveMonths"]}</td>)
-                        })}</tr>
-
-
-                        {/* Earnings Per Share Forecast */}
-                        <tr id={styles.whiteRow}><td>
-                            <div className={styles.analysisType}>
-                                <OverlayStockTable
-                                overlayHeader="Earnings Per Share Forecast"
-                                overlayBody="Forecast of the EPS metric above for the coming year."/>
-                                Earnings Per Share Forecast <BsArrowUp/>
-                            </div></td>
-                        {tickerPayloadArray.map((x,i) => {
-                            return(
-                                <td key={`EPSforecast${i}`}>{props.priceData[i]["epsForward"]}</td>)
+                                <td key={`EPS${i}`}>{props.overviewData[i]["EPS"]}</td>) //NEED METHOD
                         })}</tr>
 
 
@@ -217,7 +220,7 @@ const Index = (props, {income}) => {
                             </div></td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`EPS${i}`}>{parseFloat((1/props.priceData[i]["epsTrailingTwelveMonths"])*100).toFixed(2)+" %"}</td>)
+                                <td key={`EPS${i}`}>{parseFloat((1/props.overviewData[i]["EPS"])*100).toFixed(2)+" %"}</td>)
                         })}</tr>
 
                         {/* P/E Ratio */}
@@ -231,7 +234,7 @@ const Index = (props, {income}) => {
                             </div></td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`PE${i}`}>{( props.priceData[i]["regularMarketPrice"] / props.priceData[i]["epsTrailingTwelveMonths"] ).toFixed(2)}</td>)
+                                <td key={`PE${i}`}>{ parseInt(props.overviewData[i]["PERatio"]).toFixed(2)}</td>)// peRatio
                         })}</tr>
 
 
@@ -263,7 +266,7 @@ const Index = (props, {income}) => {
                             </td>
                             {tickerPayloadArray.map((x,i) => {
                                 return(
-                                    <td key={`pbRatio${i}`}>{ props.priceData[i]["bookValue"] }</td>)
+                                    <td key={`pbRatio${i}`}>{ props.overviewData[i]["BookValue"] }</td>)
                             })}
                         </tr>
 
@@ -280,7 +283,7 @@ const Index = (props, {income}) => {
                             </td>
                             {tickerPayloadArray.map((x,i) => {
                                 return(
-                                    <td key={`pbRatio${i}`}>{ (props.priceData[i]["regularMarketPrice"] / props.priceData[i]["bookValue"]).toFixed(2) }</td>)
+                                    <td key={`pbRatio${i}`}>{ (props.priceData[i]["iexRealtimePrice"] / props.overviewData[i]["BookValue"]).toFixed(2) }</td>)
                             })}
                         </tr>
 
@@ -313,7 +316,7 @@ const Index = (props, {income}) => {
                             console.log(dividendTotal)
                             const netShareRepurchase = props.balanceData[i]["annualReports"][1]["totalShareholderEquity"] - props.balanceData[i]["annualReports"][0]["totalShareholderEquity"]
                             const netDebtRepayment = netDebtChangeCalculation(props.balanceData[i]["annualReports"])
-                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["regularMarketPrice"]
+                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["iexRealtimePrice"] // iexRealtimePrice
                             return(
                                 <td key={`shareholderYield${i}`}> {shareHolderYield(dividendTotal, netShareRepurchase, netDebtRepayment, marketCapitalisation)}</td>)
                         })}</tr>
@@ -610,7 +613,7 @@ const Index = (props, {income}) => {
                             const a = workingCapital / totalAssets
                             const b = props.balanceData[i]["annualReports"][0]["retainedEarnings"] / totalAssets
                             const c = props.incomeData[i]["annualReports"][0]["ebit"] / props.balanceData[i]["annualReports"][0]["totalAssets"]
-                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["regularMarketPrice"]
+                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["iexRealtimePrice"] //iexRealtimePrice
                             const d = marketCapitalisation / totalLiabilities
                             const e = props.incomeData[i]["annualReports"][0]["totalRevenue"] / totalAssets
                             const altmanZScore = (1.2*a) + (1.4*b) + (3.3*c) + (0.6*d) + (1.0*e)
@@ -690,40 +693,49 @@ export async function getServerSideProps(props, context) {
 
         // ----- Overview Data - Alpha Vantage API -----:
         console.log(`Overview query running ${ticker}... `);
-        const overviewResponse = await fetch(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=Z7EE76KI01SJKDIN`);
+        const overviewResponse = await fetch(`https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${process.env.AV_API_KEY}`);
         const overview = await overviewResponse.json();
         overviewData.push(overview);
         console.log(overview)
-        await sleep(12000);  
+        sleep(12000);  
         
 
         // ----- Income Data - Alpha Vantage API -----:
         console.log(`Income query running ${ticker}... `);
-        const incomeResponse = await fetch(`https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${ticker}&apikey=Z7EE76KI01SJKDIN`);
+        const incomeResponse = await fetch(`https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${ticker}&apikey=${process.env.AV_API_KEY}`);
         const income = await incomeResponse.json();
         incomeData.push(income);
         console.log(income)
-        await sleep(12000);  
+        sleep(12000);  
 
         // ----- Price Data - Yahoo Finance API -----:
-        console.log(`Price query running ${ticker}... `);
+        /*console.log(`Price query running ${ticker}... `);
         const priceResponse = await fetch(`https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${ticker}`, {
             method: "GET", 
             accept: "application/json",
-            headers: {'x-api-key': 'NWIynlseAv3Ri0V6OuoFS8L8WZXFl1H3aKLjZi80'}});
+            headers: {'x-api-key': 'qgYb6YLwWS2RDNh4mITH21qCVVLYfHEF6AiycVZ2'}});
         const prices = await priceResponse.json();
         console.log(prices)
         console.log("hello is it here ")
         const shortenedPrices = prices["quoteResponse"]["result"][0]
-        priceData.push(shortenedPrices);
+        priceData.push(shortenedPrices);*/
+
+        console.log(`Price query running ${ticker}... `);
+        const priceResponse = await fetch(`https://cloud.iexapis.com/stable/stock/${ticker}/quote?token=${process.env.IEX_API_KEY}`);
+        const prices = await priceResponse.json();
+        priceData.push(prices);
+        console.log(prices);
+        
+
+
 
 
         // ----- Balance Sheet Data - Alpha Vantage API -----:
         console.log(`Balance query running ${ticker}... `);
-        const balanceResponse = await fetch(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${ticker}&apikey=Z7EE76KI01SJKDIN`);
+        const balanceResponse = await fetch(`https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=${ticker}&apikey=${process.env.AV_API_KEY}`);
         const balance = await balanceResponse.json();
         balanceData.push(balance);
-        await sleep(12000);
+        sleep(12000);
 
         // Gross profit growth:
         console.log(`Gross Profit Growth Calculation running ${ticker}... `);
@@ -745,39 +757,28 @@ export async function getServerSideProps(props, context) {
 
         //image:
         console.log(`Image Scraper running ${ticker}... `);
-        const google = new Scraper({
+        const image = `https://storage.googleapis.com/iex/api/logos/${ticker}.png`
+        logoImages.push(image)
+        
+        /*const google = new Scraper({
             puppeteer: {
               headless: true,
             },
         });
 
         const logoQuery = overview["Name"]
-        const logoQueryTest = "a"
         const concat = `${logoQuery} SVG logo`
         console.log(concat)
         const results = await google.scrape(concat, 1);
         const image = results[0]["url"]
         console.log(image);
-        logoImages.push(image)
-
-
-
-
-        
+        logoImages.push(image)*/
 
     }
-
-    //console.log(overviewData)
-    //console.log(incomeData)
-    //console.log(priceData)
-    //console.log(balanceData)
-    //console.log(grossprofitall[0])
 
     return{
         props: { overviewData, incomeData, priceData, balanceData, grossProfitAll, netProfitAll, netProfitMarginAll, logoImages }
     }
-
-    
     
 }
 

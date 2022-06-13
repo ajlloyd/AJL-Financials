@@ -30,7 +30,7 @@ const documentation = () => {
         <ul>
           <li>AJL Financials is a project developed by Aaron Lloyd Development</li>
           <li>This site is built with the NextJS framework for React</li>
-          <li>Data is provided by <a href='https://www.alphavantage.co/'>Alpha Vantage API</a> and the <a href='https://www.yahoofinanceapi.com/'>Yahoo Finance API</a></li>
+          <li>Data is provided by <a href='https://www.alphavantage.co/'>Alpha Vantage API</a> and the <a href='https://iexcloud.io/docs/api/'>IEX Cloud Finance API</a></li>
 
         </ul>
 
@@ -85,7 +85,7 @@ const documentation = () => {
 
       <div className={styles.footer}>
           <small>Copyright Aaron Lloyd Development © </small>
-          <small>Version 22.1</small>
+          <small>Version 22.3</small>
 
       </div>
 
