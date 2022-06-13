@@ -697,7 +697,7 @@ export async function getServerSideProps(props, context) {
         const overview = await overviewResponse.json();
         overviewData.push(overview);
         console.log(overview)
-        sleep(12000);  
+        //sleep(12000);  
         
 
         // ----- Income Data - Alpha Vantage API -----:
