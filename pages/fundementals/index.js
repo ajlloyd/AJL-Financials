@@ -116,7 +116,7 @@ const Index = (props, {income}) => {
                         <tr id={styles.whiteRow}><td>Price</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`price${i}`}>{props.priceData[i]["iexRealtimePrice"] + " " + props.priceData[i]["currency"]}</td>) 
+                                <td key={`price${i}`}>{props.priceData[i]["latestPrice"] + " " + props.priceData[i]["currency"]}</td>) 
                         })}</tr>
 
                         {/* Market Change Since Close */}
@@ -177,7 +177,7 @@ const Index = (props, {income}) => {
                                 return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
                             }
 
-                            const a = props.priceData[i]["iexRealtimePrice"]
+                            const a = props.priceData[i]["latestPrice"]
                             const b = props.priceData[i]["week52High"]
 
                             const pctDifference = relDiff(a,b)
@@ -283,7 +283,7 @@ const Index = (props, {income}) => {
                             </td>
                             {tickerPayloadArray.map((x,i) => {
                                 return(
-                                    <td key={`pbRatio${i}`}>{ (props.priceData[i]["iexRealtimePrice"] / props.overviewData[i]["BookValue"]).toFixed(2) }</td>)
+                                    <td key={`pbRatio${i}`}>{ (props.priceData[i]["latestPrice"] / props.overviewData[i]["BookValue"]).toFixed(2) }</td>)
                             })}
                         </tr>
 
@@ -316,7 +316,7 @@ const Index = (props, {income}) => {
                             console.log(dividendTotal)
                             const netShareRepurchase = props.balanceData[i]["annualReports"][1]["totalShareholderEquity"] - props.balanceData[i]["annualReports"][0]["totalShareholderEquity"]
                             const netDebtRepayment = netDebtChangeCalculation(props.balanceData[i]["annualReports"])
-                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["iexRealtimePrice"] // iexRealtimePrice
+                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["latestPrice"] // latestPrice
                             return(
                                 <td key={`shareholderYield${i}`}> {shareHolderYield(dividendTotal, netShareRepurchase, netDebtRepayment, marketCapitalisation)}</td>)
                         })}</tr>
@@ -613,7 +613,7 @@ const Index = (props, {income}) => {
                             const a = workingCapital / totalAssets
                             const b = props.balanceData[i]["annualReports"][0]["retainedEarnings"] / totalAssets
                             const c = props.incomeData[i]["annualReports"][0]["ebit"] / props.balanceData[i]["annualReports"][0]["totalAssets"]
-                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["iexRealtimePrice"] //iexRealtimePrice
+                            const marketCapitalisation = props.balanceData[i]["annualReports"][0]["commonStockSharesOutstanding"] * props.priceData[i]["latestPrice"] //latestPrice
                             const d = marketCapitalisation / totalLiabilities
                             const e = props.incomeData[i]["annualReports"][0]["totalRevenue"] / totalAssets
                             const altmanZScore = (1.2*a) + (1.4*b) + (3.3*c) + (0.6*d) + (1.0*e)
