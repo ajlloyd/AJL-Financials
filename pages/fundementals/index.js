@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { GetServerSideProps } from 'next'
-//import fetch from 'node-fetch'
 import styles from "../../styles/StockTable.module.scss"
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -8,8 +7,6 @@ import {BsArrowUp, BsArrowDown, BsBackspace, BsSunFill, BsMoonFill} from "react-
 import {AiFillHome} from "react-icons/ai"
 import Button from 'react-bootstrap/Button'
 import OverlayStockTable from '../../components/OverlayStockTable'
-import Graphy from '../../components/Graphy'
-//var Scraper = require('images-scraper');
 
 
 
@@ -18,7 +15,6 @@ const Index = (props, {income}) => {
     const router = useRouter();
     const tickerPayloadObject = router.query;
     const tickerPayloadArray = Object.values(tickerPayloadObject)
-    //console.log(tickerPayloadArray)
 
     const grossProfitProps = props.grossProfitAll
     const netProfitProps = props.netProfitAll
@@ -39,34 +35,24 @@ const Index = (props, {income}) => {
     return (
         <div className={darkMode ? [styles.metaContainer, styles.darkModeScheme].join(" ") : styles.metaContainer}>
             <div className={styles.headComponents}>
-                
                 <Link href='/'>
                     <Button className={styles.homeButton} variant="danger"> <AiFillHome/> Home </Button>
                 </Link>
-
                 <h2 className={styles.outputTitle}>Comparison Report</h2>
                 <Button className={styles.darkMode} variant="primary" onClick={() => handleDarkMode()}>  {darkMode ?  <><BsSunFill/> Disable Dark Mode</> : <><BsMoonFill/> Enable Dark Mode</>} </Button>
             </div>
 
-            
-
             <div className={styles.container}>
                 <table>
                     <tbody>
-
-
-
-                        {/* Stock Ticker Header -------------------------------------------------------------------------------------------------------------------------------------------*/}
+                        {/* --- Stock Ticker Header --- */}
                         <tr id={styles.headerRow}><td>Stock Ticker:</td>
                         {tickerPayloadArray.map((x, i) => {
                         return (
                         <td key={`dynamicTickerHeader${i}`}>{x}</td>)
                         })}</tr>
 
-                        {/*<Graphy/>*/}
-
                         {/* Image */}
-
                         <tr id={styles.imageRow}><td></td>
                         {tickerPayloadArray.map((x, i) => {
                         return (
@@ -89,23 +75,19 @@ const Index = (props, {income}) => {
                                 <td key={`sector${i}`}>{props.overviewData[i]["Sector"]}</td>)
                         })}</tr>
 
-
                         {/* Market Cap  */}
                         <tr id={styles.whiteRow}><td>Market Cap</td>
                         {tickerPayloadArray.map((x,i) => {
-
                             const n = parseInt(props.overviewData[i]["MarketCapitalization"]).toExponential(2);
                             const sliceCap = n.split("e+")
                             const mCapVal = sliceCap[0] + " x 10"
                             const mCapPower = sliceCap[1]
-
-
                             return(
-                                <td key={`Rating${i}`}> {mCapVal} <sup>{mCapPower}</sup></td>) // NO METHOD
+                                <td key={`Rating${i}`}> {mCapVal} <sup>{mCapPower}</sup></td>)
                         })}</tr>
 
 
-                        {/* Current Info Header -----------------------------------------------------------------------------------------------------------------------*/}
+                        {/* --- Current Info Header --- */}
                         <tr id={styles.headerRow}><td>Current Stock Info</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
@@ -122,18 +104,16 @@ const Index = (props, {income}) => {
                         {/* Market Change Since Close */}
                         <tr id={styles.whiteRow}><td>Change Since Close</td>
                         {tickerPayloadArray.map((x,i) => {
-                            const priceChange = props.priceData[i]["change"] //change
+                            const priceChange = props.priceData[i]["change"] 
                             function greenOrRed(change) {
                                 if (priceChange > 0) {
                                     return styles.positiveChange
-                                    
                                 } else if (priceChange < 0) {
                                     return styles.negativeChange
                                 } else {
                                     return styles.noChange
                                 }
                             }
-
                             return(
                                 <td key={`change${i}`} id={greenOrRed(priceChange)}>{priceChange.toFixed(2) + " " + props.priceData[i]["currency"] + "  (" + props.priceData[i]["changePercent"].toFixed(2) + " %)"}</td>
                                 )
@@ -172,22 +152,17 @@ const Index = (props, {income}) => {
                         {/* 52 Week High Discount Percentage */}
                         <tr id={styles.whiteRow}><td>52 Week High Discount (%)</td>
                         {tickerPayloadArray.map((x,i) => {
-
                             function relDiff(a, b) {
                                 return  100 * Math.abs( ( a - b ) / ( (a+b)/2 ) );
                             }
-
                             const a = props.priceData[i]["latestPrice"]
                             const b = props.priceData[i]["week52High"]
-
                             const pctDifference = relDiff(a,b)
-
                             return(
                                 <td key={`pctChange${i}`}>{(pctDifference).toFixed(2) + " %"}</td>) // week52High and current price difference pct
                         })}</tr>
 
-
-                        {/* Earnings --------------------------------------------------------------------------------------------------------------------------------*/}
+                        {/* --- Earnings Header --- */}
                         <tr id={styles.headerRow}><td>Earnings</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
@@ -205,7 +180,7 @@ const Index = (props, {income}) => {
                             </div></td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`EPS${i}`}>{props.overviewData[i]["EPS"]}</td>) //NEED METHOD
+                                <td key={`EPS${i}`}>{props.overviewData[i]["EPS"]}</td>) 
                         })}</tr>
 
 
@@ -234,7 +209,7 @@ const Index = (props, {income}) => {
                             </div></td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
-                                <td key={`PE${i}`}>{ parseInt(props.overviewData[i]["PERatio"]).toFixed(2)}</td>)// peRatio
+                                <td key={`PE${i}`}>{ parseInt(props.overviewData[i]["PERatio"]).toFixed(2)}</td>)
                         })}</tr>
 
 
@@ -251,7 +226,6 @@ const Index = (props, {income}) => {
                             return(
                                 <td key={`PEG${i}`}>{ props.overviewData[i]["PEGRatio"]}</td>)
                         })}</tr>
-
 
                         {/* Book Value per Share*/}
                         <tr id={styles.whiteRow}>
@@ -322,7 +296,7 @@ const Index = (props, {income}) => {
                         })}</tr>
 
 
-                        {/* Gross Profit Growth Header -----------------------------------------------------------------------------------------------------*/}
+                        {/* --- Gross Profit Growth Header --- */}
                         <tr id={styles.yoyHeader}>
                             <td>
                                 <div className={styles.analysisType}>
@@ -365,7 +339,7 @@ const Index = (props, {income}) => {
                                 <td key={`yr5-${i}`}> { grossProfitProps[i][4] } </td>)})}</tr>
 
 
-                        {/* Net Profit Growth Header ----------------------------------------------------------------------------------------*/}
+                        {/* --- Net Profit Growth Header --- */}
                         <tr id={styles.yoyHeader}>
                             <td>
                                 <div className={styles.analysisType}>
@@ -408,7 +382,7 @@ const Index = (props, {income}) => {
                                 <td key={`yr5-${i}`}> { netProfitProps[i][4] } </td>)})}</tr>        
 
 
-                        {/* Net Profit Margin Header ---------------------------------------------------------------------------------------------*/}
+                        {/* --- Net Profit Margin Header --- */}
                         <tr id={styles.yoyHeader}>
                             <td>
                                 
@@ -450,12 +424,7 @@ const Index = (props, {income}) => {
                             return(
                                 <td key={`yr5-${i}`}> { profitMarginProps[i][4]} </td>)})}</tr>
 
-
-                 
-
-
-
-                        {/* Dividends Header (black) ------------------------------------------------------------------------------------------------------------------- */}
+                        {/* --- Dividends Header --- */}
                         <tr id={styles.headerRow}><td>Dividend Information</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
@@ -476,7 +445,7 @@ const Index = (props, {income}) => {
                                 <td key={`divYield${i}`}> {(props.overviewData[i]["DividendYield"]*100).toFixed(2) + " %"}</td>)
                         })}</tr>                    
 
-                        {/* Financials Header (black) ------------------------------------------------------------------------------------------------------------------ */}
+                        {/* --- Financials Header (black) --- */}
                         <tr id={styles.headerRow}><td>Financials</td>
                         {tickerPayloadArray.map((x,i) => {
                             return(
@@ -496,7 +465,6 @@ const Index = (props, {income}) => {
                             return(
                                 <td key={`costOfGoods${i}`}> {((props.incomeData[i]["annualReports"][0]["costofGoodsAndServicesSold"]/10000000|0).toLocaleString())} </td>)
                         })}</tr>
-
 
                         {/* Operating Income/Loss (TTM) */}
                         <tr id={styles.whiteRow}><td> Operating Income/Loss (TTM) </td>
@@ -518,7 +486,6 @@ const Index = (props, {income}) => {
                             return(
                                 <td key={`grossProfit${i}`}> {(((props.incomeData[i]["annualReports"][0]["costofGoodsAndServicesSold"]/props.incomeData[i]["annualReports"][0]["totalRevenue"])*100).toFixed(2)) + " %"} </td>)
                         })}</tr>       
-
 
                         {/* Operating Margin (TTM) */}
                         <tr id={styles.whiteRow}><td> Operating Margin (TTM) <BsArrowUp/> </td>
@@ -638,7 +605,6 @@ export async function getServerSideProps(props, context) {
           currentDate = Date.now();
         } while (currentDate - date < milliseconds);
     }
-
 
     function growthCalculation(annualReport, type) {
         const growths = []
